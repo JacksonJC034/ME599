@@ -1,0 +1,62 @@
+%% Problem 1
+clc
+clear all
+load X_data.mat
+
+figure;
+histogram(X, 200); % Adjust the number of bins as needed
+title('Data Distribution');
+xlabel('Data Value');
+ylabel('Frequency');
+
+% K-means clustering to classify data into two groups
+[idx, C] = kmeans(X, 2); % idx are the indices of clusters, C are the cluster centroids
+
+% Separate data based on cluster index
+data1 = X(idx == 1);
+data2 = X(idx == 2);
+
+% Now, estimate the PDF for each cluster as before (simplified version)
+num_bins = 20; % Adjust based on your data
+figure;
+histogram(data1, num_bins, 'Normalization', 'probability');
+hold on;
+histogram(data2, num_bins, 'Normalization', 'probability');
+xlabel('Value');
+ylabel('Probability');
+legend('Group 1', 'Group 2');
+title('Estimated PDFs of Two Groups');
+
+
+expectation1 = mean(data1);
+expectation2 = mean(data2);
+disp(['Expectation of Group 1: ', num2str(expectation1)]);
+disp(['Expectation of Group 2: ', num2str(expectation2)]);
+
+% Find the closest centroid to 3.9
+[~, closestGroup] = min(abs(C - 3.9));
+disp(['The number 3.9 is more likely to belong to Group ', num2str(closestGroup)]);
+
+%% Problem 2
+
+clc
+clear all
+load X_1.mat
+load X_2.mat
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

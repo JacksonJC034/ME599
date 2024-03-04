@@ -1,0 +1,469 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Assignment2</title><meta name="generator" content="MATLAB 9.14"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2024-02-10"><meta name="DC.source" content="Assignment2.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h2>Contents</h2><div><ul><li><a href="#1">Part (a.1) Perform PCA for the mean faces and the first five eigen-faces (with pca function)</a></li><li><a href="#2">Part (a.2) Perform PCA for the mean faces and the first five eigen-faces (without pca function)</a></li><li><a href="#3">Part (b) Plot the reconstruction error against the number of principal components and determine how many principal components c are needed to achieve a reconstruction error of 2% or less.</a></li><li><a href="#4">Part (c)</a></li></ul></div><h2 id="1">Part (a.1) Perform PCA for the mean faces and the first five eigen-faces (with pca function)</h2><pre class="codeinput"><span class="comment">% First we try the pca function from Statistics and Machine Learning add-on</span>
+<span class="comment">% We have m = 66x50 = 3300 pixel per picture</span>
+<span class="comment">% We have n = 40x7x0.75 = 210 number of training pictures</span>
+<span class="comment">% Correspondingly, the train_data is a 3300x210 double, matching m and n</span>
+
+<span class="comment">% Perform PCA on the training data</span>
+<span class="comment">% Note: feed each data as a row vector to the function</span>
+[coeff, score, latent, tsquared, explained, mu] = pca(train_data');
+
+
+<span class="comment">% OUTPUTS: (from documentation)</span>
+<span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+<span class="comment">% coeff: A matrix of principal component coefficients (also known as loadings or eigenvectors),</span>
+<span class="comment">% where each column represents a principal component, and rows correspond to the original variables.</span>
+<span class="comment">% The columns are in order of decreasing component variance.</span>
+
+<span class="comment">% score: The representation of 'X'(train_data) in the principal component space.</span>
+<span class="comment">% Rows of 'score' correspond to observations, and columns to components.</span>
+
+<span class="comment">% latent: A vector containing the eigenvalues of the covariance matrix of 'X',</span>
+<span class="comment">% which represent the variance explained by the corresponding principal components.</span>
+
+<span class="comment">% tsquared: Hotellingts T-squared statistic for each observation.</span>
+
+<span class="comment">% explained: A vector containing the percentage of the total variance</span>
+<span class="comment">% explained by each principal component.</span>
+
+<span class="comment">% mu: A vector of the mean of each variable in 'X', used to center the data during the PCA process.</span>
+<span class="comment">% i.e. the mean value of each data, AKA the mean_face</span>
+<span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+
+<span class="comment">% Since all the data have been falltened (1xn) undergoing PCA we need to</span>
+<span class="comment">% Reshape the mean_face and the first five eigenfaces back to 66x50 to plot</span>
+Mean_FaceImg = reshape(mu, [66, 50]);
+EigenfacesImg = reshape(coeff(:,1:5), [66, 50, 5]);
+
+<span class="comment">% Plot the six figures</span>
+<span class="comment">% Mean_face</span>
+figure;
+subplot(2,3,1); <span class="comment">% 2x3 layout (better than 1x6)</span>
+imshow(Mean_FaceImg); <span class="comment">% Visualize the matrix</span>
+colormap <span class="string">gray</span>; <span class="comment">% In gray</span>
+title(<span class="string">'Mean Face'</span>);
+axis <span class="string">image</span>; <span class="comment">% fix ratio of images</span>
+
+<span class="comment">% First five eigen_faces, similar process</span>
+<span class="keyword">for</span> i = 1:5
+    subplot(2,3,i+1);
+    imagesc(EigenfacesImg(:,:,i)); <span class="comment">% imagesc since eigenfaces are stored in a 3D array</span>
+    colormap <span class="string">gray</span>;
+    title([<span class="string">'Eigenface '</span>, num2str(i)]);
+    axis <span class="string">image</span>; <span class="comment">% Ensure the aspect ratio is not distorted</span>
+    axis <span class="string">off</span>;
+<span class="keyword">end</span>
+</pre><img vspace="5" hspace="5" src="Assignment2_01.png" alt=""> <h2 id="2">Part (a.2) Perform PCA for the mean faces and the first five eigen-faces (without pca function)</h2><pre class="codeinput"><span class="comment">% Here we manually calculate the eigenvectors and mean of each data</span>
+
+<span class="comment">% Normalize the data by substracting the mean</span>
+X = train_data;
+meanval = mean(X, 2); <span class="comment">% Mean of each row (mean(X, 1) for column) [3300x1]</span>
+X = X - meanval; <span class="comment">% Subtract mean [3300x210 - 3300x1]</span>
+
+<span class="comment">% Carry out SVD</span>
+<span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+<span class="comment">% What are we doing here?</span>
+<span class="comment">% 1. To do Dimensionality Reduction</span>
+<span class="comment">% Why SVD?</span>
+<span class="comment">% 1. SVD is numerically stable</span>
+<span class="comment">% 2. SVD is the most efficient method to find the most representative bases</span>
+<span class="comment">% for the data. Namely, it is used to find the pricipal components</span>
+<span class="comment">% containing the most variance of the data with the fewest number of</span>
+<span class="comment">% components.</span>
+
+[U, S, V] = svd(X);
+
+<span class="comment">% U contains the eigenvectors</span>
+<span class="comment">% S contains the singular values</span>
+<span class="comment">% V's columns are the principal components of the covariance matrix of X</span>
+<span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+
+<span class="comment">% Reshape for visualization</span>
+Mean_FaceImg = reshape(meanval, 66, 50);
+EigenfacesImg = reshape(U(:, 1:5), 66, 50, 5);
+
+<span class="comment">% Plot</span>
+figure;
+subplot(2,3,1);
+imshow(Mean_FaceImg);
+colormap <span class="string">gray</span>;
+title(<span class="string">'Mean Face'</span>);
+axis <span class="string">image</span>;
+
+<span class="keyword">for</span> i = 1:5
+    subplot(2,3,i+1);
+    imagesc(EigenfacesImg(:,:,i));
+    colormap <span class="string">gray</span>;
+    title([<span class="string">'Eigenface '</span>, num2str(i)]);
+    axis <span class="string">image</span>;
+    axis <span class="string">off</span>;
+<span class="keyword">end</span>
+
+<span class="comment">% Comments for manual pca and pca function from add-on:</span>
+<span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+<span class="comment">% The outputs of manual pca and those from pca function are different.</span>
+<span class="comment">% The reason they are different is that we are getting bases with opposite</span>
+<span class="comment">% directions i.e. getting eigenvectors with different signs.</span>
+<span class="comment">% Thus we can draw the conclusion that we are getting equivalent results</span>
+<span class="comment">% from manul pca and from the pca function dispite the different</span>
+<span class="comment">% presentations of eigenfaces.</span>
+<span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+</pre><img vspace="5" hspace="5" src="Assignment2_02.png" alt=""> <h2 id="3">Part (b) Plot the reconstruction error against the number of principal components and determine how many principal components c are needed to achieve a reconstruction error of 2% or less.</h2><pre class="codeinput"><span class="comment">% Part b.1 Find c for 2% error</span>
+<span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+<span class="comment">% We have X from Part (a), the centered data matrix</span>
+<span class="comment">% And we have the U, S, V too</span>
+<span class="comment">% Now we calculate the eigenvalues of X, we have the covariance matrix C as</span>
+<span class="comment">% C = XX^T / (n - 1)</span>
+<span class="comment">% Plug in X = USV^T</span>
+<span class="comment">% We have C = US^2U^T / (n - 1), which is diagonalizable</span>
+<span class="comment">% The eigenvalue matrix Lambda = S^2 / (n - 1)</span>
+X = test_data;
+X = X - meanval;
+eigenvalues = diag(S).^2 / (size(X, 2) - 1);
+
+<span class="comment">% Cumulative sum of eigenvalues for total variance</span>
+total_variance = sum(eigenvalues);
+
+<span class="comment">% Reconstruction error ratio rk for different k</span>
+numComponents = length(eigenvalues); <span class="comment">% Number of principal components</span>
+rk = zeros(numComponents, 1); <span class="comment">% Initialize reconstruction error ratio array</span>
+
+<span class="keyword">for</span> k = 1:numComponents
+    rk(k) = sum(eigenvalues(k+1:end)) / total_variance;
+<span class="keyword">end</span>
+
+<span class="comment">% Find k where rk is 2% or less</span>
+cMax = find(rk &lt;= 0.02, 1, <span class="string">'first'</span>);
+
+<span class="comment">% Plot rk vs. k</span>
+figure;
+plot(1:numComponents, rk * 100); <span class="comment">% Convert to percentage</span>
+xlabel(<span class="string">'Number of Principal Components (k)'</span>);
+ylabel(<span class="string">'Reconstruction Error Ratio (%)'</span>);
+title(<span class="string">'Reconstruction Error Ratio vs. Number of Principal Components'</span>);
+grid <span class="string">on</span>;
+hold <span class="string">on</span>;
+<span class="keyword">if</span> ~isempty(cMax)
+    plot(cMax, rk(cMax) * 100, <span class="string">'ro'</span>);
+    legend(<span class="string">'Reconstruction Error'</span>, [<span class="string">'2% Threshold at k = '</span>, num2str(cMax)]);
+<span class="keyword">else</span>
+    legend(<span class="string">'Reconstruction Error'</span>);
+<span class="keyword">end</span>
+
+<span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+
+<span class="comment">% Part b.2 Reconstruction of Images with c = 1, 5, 10, and cMax</span>
+<span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+<span class="comment">% Number of components to use for reconstruction</span>
+components = [1, 5, 10, cMax];
+
+<span class="comment">% Select a random image from your dataset</span>
+randIndex = randi(size(X, 2));
+originalImage = X(:, randIndex) + meanval; <span class="comment">% Adding mean back to visualize</span>
+
+<span class="comment">% Reshape and display the original image</span>
+figure;
+subplot(1, 5, 1);
+imagesc(reshape(originalImage, 66, 50)); <span class="comment">% Original image</span>
+colormap <span class="string">gray</span>;
+title(<span class="string">'Original Image'</span>);
+axis <span class="string">image</span>;
+axis <span class="string">off</span>;
+
+<span class="keyword">for</span> i = 1:4
+    c = components(i);
+    <span class="comment">% Project the image onto the first 'c' principal components</span>
+    y = U(:, 1:c)' * X(:, randIndex);
+
+    <span class="comment">% Reconstruct the image from its reduced representation</span>
+    reconstructed = U(:, 1:c) * y;  <span class="comment">% Correct: Use matrix multiplication '*'</span>
+    reconstructed = reconstructed + meanval;  <span class="comment">% Adding the mean back</span>
+
+    <span class="comment">% Ensure that 'reconstructed' is properly reshaped to match the original image size</span>
+    <span class="comment">% Using '[]' as one of the arguments to 'reshape' lets MATLAB automatically calculate the correct dimension</span>
+    subplot(1, 5, i+1);
+    imagesc(reshape(reconstructed, 66, []));  <span class="comment">% Adjust dimensions as per your data</span>
+    colormap <span class="string">gray</span>;  <span class="comment">% Apply gray colormap for visual consistency</span>
+    title([<span class="string">'Reconstructed with '</span>, num2str(c), <span class="string">' PCs'</span>]);
+    axis <span class="string">image</span>;  <span class="comment">% Ensure aspect ratio matches that of an image</span>
+    axis <span class="string">off</span>;  <span class="comment">% Hide axis for clarity</span>
+<span class="keyword">end</span>
+
+<span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+</pre><img vspace="5" hspace="5" src="Assignment2_03.png" alt=""> <img vspace="5" hspace="5" src="Assignment2_04.png" alt=""> <h2 id="4">Part (c)</h2><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2023a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Part (a.1) Perform PCA for the mean faces and the first five eigen-faces (with pca function)
+
+% First we try the pca function from Statistics and Machine Learning add-on
+% We have m = 66x50 = 3300 pixel per picture
+% We have n = 40x7x0.75 = 210 number of training pictures
+% Correspondingly, the train_data is a 3300x210 double, matching m and n
+
+% Perform PCA on the training data
+% Note: feed each data as a row vector to the function
+[coeff, score, latent, tsquared, explained, mu] = pca(train_data');
+
+
+% OUTPUTS: (from documentation)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% coeff: A matrix of principal component coefficients (also known as loadings or eigenvectors), 
+% where each column represents a principal component, and rows correspond to the original variables. 
+% The columns are in order of decreasing component variance.
+
+% score: The representation of 'X'(train_data) in the principal component space. 
+% Rows of 'score' correspond to observations, and columns to components.
+
+% latent: A vector containing the eigenvalues of the covariance matrix of 'X', 
+% which represent the variance explained by the corresponding principal components.
+
+% tsquared: Hotellingts T-squared statistic for each observation.
+
+% explained: A vector containing the percentage of the total variance 
+% explained by each principal component.
+
+% mu: A vector of the mean of each variable in 'X', used to center the data during the PCA process.
+% i.e. the mean value of each data, AKA the mean_face
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Since all the data have been falltened (1xn) undergoing PCA we need to
+% Reshape the mean_face and the first five eigenfaces back to 66x50 to plot
+Mean_FaceImg = reshape(mu, [66, 50]);
+EigenfacesImg = reshape(coeff(:,1:5), [66, 50, 5]);
+
+% Plot the six figures
+% Mean_face
+figure;
+subplot(2,3,1); % 2x3 layout (better than 1x6)
+imshow(Mean_FaceImg); % Visualize the matrix
+colormap gray; % In gray
+title('Mean Face');
+axis image; % fix ratio of images
+
+% First five eigen_faces, similar process
+for i = 1:5
+    subplot(2,3,i+1);
+    imagesc(EigenfacesImg(:,:,i)); % imagesc since eigenfaces are stored in a 3D array
+    colormap gray;
+    title(['Eigenface ', num2str(i)]);
+    axis image; % Ensure the aspect ratio is not distorted
+    axis off;
+end
+
+
+%% Part (a.2) Perform PCA for the mean faces and the first five eigen-faces (without pca function)
+
+% Here we manually calculate the eigenvectors and mean of each data
+
+% Normalize the data by substracting the mean
+X = train_data;
+meanval = mean(X, 2); % Mean of each row (mean(X, 1) for column) [3300x1]
+X = X - meanval; % Subtract mean [3300x210 - 3300x1]
+
+% Carry out SVD
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% What are we doing here?
+% 1. To do Dimensionality Reduction
+% Why SVD?
+% 1. SVD is numerically stable
+% 2. SVD is the most efficient method to find the most representative bases
+% for the data. Namely, it is used to find the pricipal components
+% containing the most variance of the data with the fewest number of
+% components.
+
+[U, S, V] = svd(X);
+
+% U contains the eigenvectors
+% S contains the singular values
+% V's columns are the principal components of the covariance matrix of X
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Reshape for visualization
+Mean_FaceImg = reshape(meanval, 66, 50);
+EigenfacesImg = reshape(U(:, 1:5), 66, 50, 5);
+
+% Plot
+figure;
+subplot(2,3,1);
+imshow(Mean_FaceImg); 
+colormap gray;
+title('Mean Face');
+axis image;
+
+for i = 1:5
+    subplot(2,3,i+1);
+    imagesc(EigenfacesImg(:,:,i)); 
+    colormap gray;
+    title(['Eigenface ', num2str(i)]);
+    axis image;
+    axis off;
+end
+
+% Comments for manual pca and pca function from add-on:
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% The outputs of manual pca and those from pca function are different.
+% The reason they are different is that we are getting bases with opposite
+% directions i.e. getting eigenvectors with different signs.
+% Thus we can draw the conclusion that we are getting equivalent results
+% from manul pca and from the pca function dispite the different
+% presentations of eigenfaces.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%% Part (b) Plot the reconstruction error against the number of principal components and determine how many principal components c are needed to achieve a reconstruction error of 2% or less.
+
+% Part b.1 Find c for 2% error
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% We have X from Part (a), the centered data matrix
+% And we have the U, S, V too
+% Now we calculate the eigenvalues of X, we have the covariance matrix C as
+% C = XX^T / (n - 1)
+% Plug in X = USV^T
+% We have C = US^2U^T / (n - 1), which is diagonalizable
+% The eigenvalue matrix Lambda = S^2 / (n - 1)
+X = test_data;
+X = X - meanval;
+eigenvalues = diag(S).^2 / (size(X, 2) - 1);
+
+% Cumulative sum of eigenvalues for total variance
+total_variance = sum(eigenvalues);
+
+% Reconstruction error ratio rk for different k
+numComponents = length(eigenvalues); % Number of principal components
+rk = zeros(numComponents, 1); % Initialize reconstruction error ratio array
+
+for k = 1:numComponents
+    rk(k) = sum(eigenvalues(k+1:end)) / total_variance;
+end
+
+% Find k where rk is 2% or less
+cMax = find(rk <= 0.02, 1, 'first');
+
+% Plot rk vs. k
+figure;
+plot(1:numComponents, rk * 100); % Convert to percentage
+xlabel('Number of Principal Components (k)');
+ylabel('Reconstruction Error Ratio (%)');
+title('Reconstruction Error Ratio vs. Number of Principal Components');
+grid on;
+hold on;
+if ~isempty(cMax)
+    plot(cMax, rk(cMax) * 100, 'ro');
+    legend('Reconstruction Error', ['2% Threshold at k = ', num2str(cMax)]);
+else
+    legend('Reconstruction Error');
+end
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Part b.2 Reconstruction of Images with c = 1, 5, 10, and cMax
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Number of components to use for reconstruction
+components = [1, 5, 10, cMax];
+
+% Select a random image from your dataset
+randIndex = randi(size(X, 2));
+originalImage = X(:, randIndex) + meanval; % Adding mean back to visualize
+
+% Reshape and display the original image
+figure;
+subplot(1, 5, 1);
+imagesc(reshape(originalImage, 66, 50)); % Original image
+colormap gray;
+title('Original Image');
+axis image;
+axis off;
+
+for i = 1:4
+    c = components(i);
+    % Project the image onto the first 'c' principal components
+    y = U(:, 1:c)' * X(:, randIndex);
+    
+    % Reconstruct the image from its reduced representation
+    reconstructed = U(:, 1:c) * y;  % Correct: Use matrix multiplication '*'
+    reconstructed = reconstructed + meanval;  % Adding the mean back
+    
+    % Ensure that 'reconstructed' is properly reshaped to match the original image size
+    % Using '[]' as one of the arguments to 'reshape' lets MATLAB automatically calculate the correct dimension
+    subplot(1, 5, i+1);
+    imagesc(reshape(reconstructed, 66, []));  % Adjust dimensions as per your data
+    colormap gray;  % Apply gray colormap for visual consistency
+    title(['Reconstructed with ', num2str(c), ' PCs']);
+    axis image;  % Ensure aspect ratio matches that of an image
+    axis off;  % Hide axis for clarity
+end
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%% Part (c)
+
+
+
+##### SOURCE END #####
+--></body></html>
